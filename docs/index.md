@@ -1,6 +1,6 @@
-# PROJECT NAME HERE
+# Firewatch Game
 
-by YOUR NAME HERE
+by Billy Bridgeman
 
 ---
 

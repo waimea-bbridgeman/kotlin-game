@@ -66,7 +66,7 @@ class MainWindow(val app: App) {
     }
 
     private fun setupLayout() {
-        panel.preferredSize = java.awt.Dimension(400, 220)
+        panel.preferredSize = java.awt.Dimension(1000, 800)
 
         titleLabel.setBounds(30, 30, 340, 30)
         infoLabel.setBounds(30, 90, 340, 30)
@@ -130,7 +130,14 @@ class MainWindow(val app: App) {
     }
 }
 
+class Locations {
 
+
+    init{
+        val thoroughfareBasin = ()
+
+    }
+}
 /**
  * Info UI window is a child dialog and shows how the
  * app state can be shown / updated from multiple places
