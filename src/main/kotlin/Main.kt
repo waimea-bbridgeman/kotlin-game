@@ -9,43 +9,64 @@ import javax.swing.*
 fun main() {
     FlatMacDarkLaf.setup()          // Initialise the LAF
 
-    val app = App()                 // Get an app state object
+    val app = GameWorld()                 // Get an app state object
     val window = MainWindow(app)    // Spawn the UI, passing in the app state
 
     SwingUtilities.invokeLater { window.show() }
 }
 
 
+class Location(
+    val name: String,
+    val type: String, // forest, lookout, cave, lake, etc.
+    val description: String
+) {
+
+}
+
+
 /**
  * Manage app state
  *
- * @property name the user's name
- * @property score the points earned
  */
-class App {
-    var name = "Test"
-    var score = 0
+class GameWorld {
+    val locations = mutableListOf<Location>()
 
-    fun scorePoints(points: Int) {
-        score += points
+
+    init {
+        val thoroughfareBasin = Location("Thoroughfare Basin", "Meadow", "Thoroughfare Basin is " +
+                "an untamed wide open stretch of Wyoming wilderness where golden grasses ripple in the wind and " +
+                "scattered pines stand like sentinels under an endless sky. The land rolls gently," +
+                "broken by rocky outcrops and distant ridgelines")
+
+        val wapitiMeadow = Location("Wapiti Meadow", "Meadow", "Wapiti Meadow opens up suddenly, " +
+                "the trees pulling back to reveal a wide stretch of grass. It gives you the strange sense that while " +
+                "you can see everything in the meadow, you can’t see what’s watching from just beyond it. " )
+
+        val beartoothPoint = Location("Beartooth Point", "Meadow", " The ground grows steeper, " +
+                "rockier, less forgiving, until the forest thins out and finally gives up. ")
+
+        val mulePoint
+
+        val thunderCanyon
+
+        val jonesyLake
+
+        val fiveMileCreek
+
+
+
     }
 
-    fun resetScore() {
-        score = 0
-    }
-
-    fun maxScoreReached(): Boolean {
-        return score >= 10000
-    }
 }
 
 
 /**
  * Main UI window, handles user clicks, etc.
  *
- * @param app the app state object
+ * @param GameWorld the app state object
  */
-class MainWindow(val app: App) {
+class MainWindow(val GameWorld: GameWorld) {
     val frame = JFrame("WINDOW TITLE")
     private val panel = JPanel().apply { layout = null }
 
@@ -55,7 +76,7 @@ class MainWindow(val app: App) {
     private val clickButton = JButton("Click Me!")
     private val infoButton = JButton("Info")
 
-    private val infoWindow = InfoWindow(this, app)      // Pass app state to dialog too
+    private val infoWindow = InfoWindow(this, GameWorld)      // Pass app state to dialog too
 
     init {
         setupLayout()
@@ -103,7 +124,7 @@ class MainWindow(val app: App) {
     }
 
     private fun handleMainClick() {
-        app.scorePoints(1000)       // Update the app state
+//        app.scorePoints(1000)       // Update the app state
         updateUI()                  // Update this window UI to reflect this
     }
 
@@ -112,15 +133,15 @@ class MainWindow(val app: App) {
     }
 
     fun updateUI() {
-        infoLabel.text = "User ${app.name} has ${app.score} points"
+//        infoLabel.text = "User ${app.name} has ${app.score} points"
 
-        if (app.maxScoreReached()) {
-            clickButton.text = "No More!"
-            clickButton.isEnabled = false
-        } else {
-            clickButton.text = "Click Me!"
-            clickButton.isEnabled = true
-        }
+//        if (app.maxScoreReached()) {
+//            clickButton.text = "No More!"
+//            clickButton.isEnabled = false
+//        } else {
+//            clickButton.text = "Click Me!"
+//            clickButton.isEnabled = true
+//        }
 
         infoWindow.updateUI()       // Keep child dialog window UI up-to-date too
     }
@@ -130,14 +151,8 @@ class MainWindow(val app: App) {
     }
 }
 
-class Locations {
 
 
-    init{
-        val thoroughfareBasin = ()
-
-    }
-}
 /**
  * Info UI window is a child dialog and shows how the
  * app state can be shown / updated from multiple places
@@ -145,7 +160,7 @@ class Locations {
  * @param owner the parent frame, used to position and layer the dialog correctly
  * @param app the app state object
  */
-class InfoWindow(val owner: MainWindow, val app: App) {
+class InfoWindow(val owner: MainWindow, val app: GameWorld) {
     private val dialog = JDialog(owner.frame, "DIALOG TITLE", false)
     private val panel = JPanel().apply { layout = null }
 
@@ -187,15 +202,15 @@ class InfoWindow(val owner: MainWindow, val app: App) {
     }
 
     private fun handleResetClick() {
-        app.resetScore()    // Update the app state
+//        app.resetScore()    // Update the app state
         owner.updateUI()    // Update the UI to reflect this, via the main window
     }
 
     fun updateUI() {
         // Use app properties to display state
-        infoLabel.text = "<html>User: ${app.name}<br>Score: ${app.score} points"
+//        infoLabel.text = "<html>User: ${app.name}<br>Score: ${app.score} points"
 
-        resetButton.isEnabled = app.score > 0
+//        resetButton.isEnabled = app.score > 0
     }
 
     fun show() {
