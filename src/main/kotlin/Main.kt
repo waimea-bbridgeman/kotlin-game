@@ -21,7 +21,10 @@ class Location(
     val type: String, // forest, lookout, cave, lake, etc.
     val description: String
 ) {
-
+    var north: Location? = null
+    var south: Location? = null
+    var east: Location? = null
+    var west: Location? = null
 }
 
 
@@ -34,25 +37,42 @@ class GameWorld {
 
 
     init {
-        val thoroughfareBasin = Location("Thoroughfare Basin", "Meadow", "Thoroughfare Basin is " +
-                "an untamed wide open stretch of Wyoming wilderness where golden grasses ripple in the wind and " +
-                "scattered pines stand like sentinels under an endless sky. The land rolls gently," +
-                "broken by rocky outcrops and distant ridgelines")
 
-        val wapitiMeadow = Location("Wapiti Meadow", "Meadow", "Wapiti Meadow opens up suddenly, " +
-                "the trees pulling back to reveal a wide stretch of grass. It gives you the strange sense that while " +
-                "you can see everything in the meadow, you can’t see what’s watching from just beyond it. " )
+        //setup locations to be added to the list
 
-        val beartoothPoint = Location("Beartooth Point", "Meadow", " The ground grows steeper, " +
-                "rockier, less forgiving, until the forest thins out and finally gives up. ")
+        val thoroughfareBasin = Location("Thoroughfare Basin", "Meadow", "")
 
-        val mulePoint
+        val wapitiMeadow = Location("Wapiti Meadow", "Meadow", "" )
 
-        val thunderCanyon
+        val beartoothPoint = Location("Beartooth Point", "Meadow", "")
 
-        val jonesyLake
+        val mulePoint = Location("Mule Point", "Dead forest", "")
 
-        val fiveMileCreek
+        val thunderCanyon = Location("Thunder Canyon", "Canyon", "")
+
+        val jonesyLake = Location("Jonesy Lake", "Lake", "")
+
+        val fiveMileCreek = Location("Five Mile Creek", "Creek", "")
+
+        val cottonWoodCreek = Location("CottonWood Creek", "Creek", "")
+
+        val rubyRiver = Location("Ruby River", "River", "")
+
+        val TwoForksLookout = Location("TwoForks Lookout", "Lookout", "")
+
+      //add them
+
+        locations.add(thoroughfareBasin)
+        locations.add(wapitiMeadow)
+        locations.add(beartoothPoint)
+        locations.add(mulePoint)
+        locations.add(thunderCanyon)
+        locations.add(jonesyLake)
+        locations.add(fiveMileCreek)
+        locations.add(cottonWoodCreek)
+        locations.add(rubyRiver)
+        locations.add(TwoForksLookout)
+
 
 
 
@@ -61,20 +81,24 @@ class GameWorld {
 }
 
 
+class GamePlay {
+    fun currentLocation() {
+
+    }
+
+}
 /**
  * Main UI window, handles user clicks, etc.
  *
  * @param GameWorld the app state object
  */
 class MainWindow(val GameWorld: GameWorld) {
-    val frame = JFrame("WINDOW TITLE")
+    val frame = JFrame("Firewatch Game")
     private val panel = JPanel().apply { layout = null }
 
-    private val titleLabel = JLabel("APP TITLE")
+    private val titleLabel = JLabel("Firewatch")
 
     private val infoLabel = JLabel()
-    private val clickButton = JButton("Click Me!")
-    private val infoButton = JButton("Info")
 
     private val infoWindow = InfoWindow(this, GameWorld)      // Pass app state to dialog too
 
@@ -87,27 +111,21 @@ class MainWindow(val GameWorld: GameWorld) {
     }
 
     private fun setupLayout() {
-        panel.preferredSize = java.awt.Dimension(1000, 800)
+        panel.preferredSize = java.awt.Dimension(1500, 800)
 
         titleLabel.setBounds(30, 30, 340, 30)
         infoLabel.setBounds(30, 90, 340, 30)
-        clickButton.setBounds(30, 150, 240, 40)
-        infoButton.setBounds(300, 150, 70, 40)
 
         panel.add(titleLabel)
         panel.add(infoLabel)
-        panel.add(clickButton)
-        panel.add(infoButton)
+
     }
 
     private fun setupStyles() {
         titleLabel.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
         infoLabel.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
 
-        clickButton.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
-        clickButton.background = Color(0xcc0055)
 
-        infoButton.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
     }
 
     private fun setupWindow() {
@@ -119,8 +137,7 @@ class MainWindow(val GameWorld: GameWorld) {
     }
 
     private fun setupActions() {
-        clickButton.addActionListener { handleMainClick() }
-        infoButton.addActionListener { handleInfoClick() }
+
     }
 
     private fun handleMainClick() {
