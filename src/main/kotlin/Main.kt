@@ -20,11 +20,9 @@ class Location(
     val name: String,
     val type: String, // forest, lookout, cave, lake, etc.
     val description: String
+
 ) {
-    var north: Location? = null
-    var south: Location? = null
-    var east: Location? = null
-    var west: Location? = null
+
 }
 
 
@@ -40,25 +38,38 @@ class GameWorld {
 
         //setup locations to be added to the list
 
-        val thoroughfareBasin = Location("Thoroughfare Basin", "Meadow", "")
+        val thoroughfareBasin = Location("Thoroughfare Basin", "Meadow", "A broad, forested " +
+                "valley that links many trails and regions. It feels calm at first but gradually becomes more tense " +
+                "as events unfold.")
 
-        val wapitiMeadow = Location("Wapiti Meadow", "Meadow", "" )
+        val wapitiMeadow = Location("Wapiti Meadow", "Meadow", "A bright, open field surrounded" +
+                " by trees, made unsettling by the presence of a secret fenced research area. The contrast makes " +
+                "it one of the eeriest spots." )
 
-        val beartoothPoint = Location("Beartooth Point", "Meadow", "")
+        val beartoothPoint = Location("Beartooth Point", "Meadow", "A high, rocky lookout with " +
+                "wide views over the wilderness. It highlights the scale of the forest and Henry’s isolation.")
 
-        val mulePoint = Location("Mule Point", "Dead forest", "")
+        val mulePoint = Location("Mule Point", "Dead forest", " A quieter overlook with softer " +
+                "terrain and peaceful scenery. It offers a break from the tension found in other areas.")
 
-        val thunderCanyon = Location("Thunder Canyon", "Canyon", "")
+        val thunderCanyon = Location("Thunder Canyon", "Canyon", "A dramatic canyon with steep " +
+                "walls and a rushing river below. The echoing water creates a powerful but slightly claustrophobic " +
+                "atmosphere.")
 
-        val jonesyLake = Location("Jonesy Lake", "Lake", "")
+        val jonesyLake = Location("Jonesy Lake", "Lake", " A calm, reflective lake tucked away " +
+                "in the forest. It feels peaceful, though the stillness can seem a bit eerie.")
 
-        val fiveMileCreek = Location("Five Mile Creek", "Creek", "")
+        val fiveMileCreek = Location("Five Mile Creek", "Creek", "A lively creek running through " +
+                "wooded areas, adding sound and movement. It enhances the natural immersion of the environment.")
 
-        val cottonWoodCreek = Location("CottonWood Creek", "Creek", "")
+        val cottonWoodCreek = Location("CottonWood Creek", "Creek", "A more remote and quiet creek" +
+                " in less-traveled terrain. It feels deeper in the wilderness and more isolated. ")
 
-        val rubyRiver = Location("Ruby River", "River", "")
+        val rubyRiver = Location("Ruby River", "River", "A large, fast-moving river that shapes " +
+                "the landscape. It acts as a natural boundary and adds to the rugged feel of the area.")
 
-        val TwoForksLookout = Location("TwoForks Lookout", "Lookout", "")
+        val twoForksLookout = Location("Two-Forks Lookout", "Lookout", "Henry’s fire tower and main" +
+                " base of operations. It serves as both a safe space and a symbol of solitude throughout the story.")
 
       //add them
 
@@ -71,19 +82,20 @@ class GameWorld {
         locations.add(fiveMileCreek)
         locations.add(cottonWoodCreek)
         locations.add(rubyRiver)
-        locations.add(TwoForksLookout)
+        locations.add(twoForksLookout)
 
 
 
 
     }
 
+
 }
 
 
-class GamePlay {
+class GamePlay(val gameWorld: GameWorld, var currentLocation: Location){
     fun currentLocation() {
-
+        currentLocation = gameWorld.locations[9]
     }
 
 }
@@ -141,7 +153,7 @@ class MainWindow(val GameWorld: GameWorld) {
     }
 
     private fun handleMainClick() {
-//        app.scorePoints(1000)       // Update the app state
+
         updateUI()                  // Update this window UI to reflect this
     }
 
