@@ -22,7 +22,14 @@ class Location(
     val description: String
 
 ) {
-
+    var north: Location? = null
+    var northEast: Location? = null
+    var east: Location? = null
+    var southEast: Location? = null
+    var south: Location? = null
+    var southWest: Location? = null
+    var west: Location? = null
+    var northWest: Location? = null
 }
 
 
@@ -38,7 +45,7 @@ class GameWorld {
 
         //setup locations to be added to the list
 
-        val thoroughfareBasin = Location("Thoroughfare Basin", "Meadow", "A broad, forested " +
+        val thorofareBasin = Location("Thoroughfare Basin", "Meadow", "A broad, forested " +
                 "valley that links many trails and regions. It feels calm at first but gradually becomes more tense " +
                 "as events unfold.")
 
@@ -73,7 +80,7 @@ class GameWorld {
 
       //add them
 
-        locations.add(thoroughfareBasin)
+        locations.add(thorofareBasin)
         locations.add(wapitiMeadow)
         locations.add(beartoothPoint)
         locations.add(mulePoint)
@@ -84,8 +91,50 @@ class GameWorld {
         locations.add(rubyRiver)
         locations.add(twoForksLookout)
 
+        // Two Forks Lookout
+        twoForksLookout.north = beartoothPoint
+        twoForksLookout.northWest = thunderCanyon
+        twoForksLookout.south = rubyRiver
 
+        // Beartooth Point
+        beartoothPoint.south = twoForksLookout
+        beartoothPoint.southWest = wapitiMeadow
 
+        // Ruby River
+        rubyRiver.north = twoForksLookout
+        rubyRiver.northWest = thunderCanyon
+        rubyRiver.west = cottonWoodCreek
+
+        // Cottonwood Creek
+        cottonWoodCreek.east = rubyRiver
+        cottonWoodCreek.west = fiveMileCreek
+        cottonWoodCreek.north = thunderCanyon
+
+        // Five Mile Creek
+        fiveMileCreek.east = cottonWoodCreek
+        fiveMileCreek.northEast = jonesyLake
+
+        // Jonesy Lake
+        jonesyLake.southWest = fiveMileCreek
+        jonesyLake.east = thunderCanyon
+
+        // Thunder Canyon
+        thunderCanyon.south = cottonWoodCreek
+        thunderCanyon.southEast = twoForksLookout
+        thunderCanyon.west = jonesyLake
+        thunderCanyon.north = mulePoint
+
+        // Mule Point
+        mulePoint.south = thunderCanyon
+        mulePoint.north = wapitiMeadow
+
+        // Wapiti Meadow
+        wapitiMeadow.south = mulePoint
+        wapitiMeadow.north = thorofareBasin
+        wapitiMeadow.northEast = beartoothPoint
+
+        // Thoroughfare Basin
+        thorofareBasin.south = wapitiMeadow
 
     }
 
@@ -96,7 +145,10 @@ class GameWorld {
 class GamePlay(val gameWorld: GameWorld, var currentLocation: Location){
     fun currentLocation() {
         currentLocation = gameWorld.locations[9]
+        println(currentLocation)
     }
+
+
 
 }
 /**
@@ -110,9 +162,9 @@ class MainWindow(val GameWorld: GameWorld) {
 
     private val titleLabel = JLabel("Firewatch")
 
-    private val infoLabel = JLabel()
+    private val userInput = JLabel()
 
-    private val infoWindow = InfoWindow(this, GameWorld)      // Pass app state to dialog too
+
 
     init {
         setupLayout()
@@ -126,16 +178,16 @@ class MainWindow(val GameWorld: GameWorld) {
         panel.preferredSize = java.awt.Dimension(1500, 800)
 
         titleLabel.setBounds(30, 30, 340, 30)
-        infoLabel.setBounds(30, 90, 340, 30)
+        userInput.setBounds(30, 90, 340, 30)
 
         panel.add(titleLabel)
-        panel.add(infoLabel)
+        panel.add(userInput)
 
     }
 
     private fun setupStyles() {
         titleLabel.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
-        infoLabel.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
+        userInput.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
 
 
     }
@@ -158,7 +210,7 @@ class MainWindow(val GameWorld: GameWorld) {
     }
 
     private fun handleInfoClick() {
-        infoWindow.show()
+
     }
 
     fun updateUI() {
@@ -172,7 +224,7 @@ class MainWindow(val GameWorld: GameWorld) {
 //            clickButton.isEnabled = true
 //        }
 
-        infoWindow.updateUI()       // Keep child dialog window UI up-to-date too
+
     }
 
     fun show() {
@@ -181,74 +233,3 @@ class MainWindow(val GameWorld: GameWorld) {
 }
 
 
-
-/**
- * Info UI window is a child dialog and shows how the
- * app state can be shown / updated from multiple places
- *
- * @param owner the parent frame, used to position and layer the dialog correctly
- * @param app the app state object
- */
-class InfoWindow(val owner: MainWindow, val app: GameWorld) {
-    private val dialog = JDialog(owner.frame, "DIALOG TITLE", false)
-    private val panel = JPanel().apply { layout = null }
-
-    private val infoLabel = JLabel()
-    private val resetButton = JButton("Reset")
-
-    init {
-        setupLayout()
-        setupStyles()
-        setupActions()
-        setupWindow()
-        updateUI()
-    }
-
-    private fun setupLayout() {
-        panel.preferredSize = java.awt.Dimension(240, 180)
-
-        infoLabel.setBounds(30, 30, 180, 60)
-        resetButton.setBounds(30, 120, 180, 30)
-
-        panel.add(infoLabel)
-        panel.add(resetButton)
-    }
-
-    private fun setupStyles() {
-        infoLabel.font = Font(Font.SANS_SERIF, Font.PLAIN, 16)
-        resetButton.font = Font(Font.SANS_SERIF, Font.PLAIN, 16)
-    }
-
-    private fun setupWindow() {
-        dialog.isResizable = false                              // Can't resize
-        dialog.defaultCloseOperation = JDialog.HIDE_ON_CLOSE    // Hide upon window close
-        dialog.contentPane = panel                              // Main content panel
-        dialog.pack()
-    }
-
-    private fun setupActions() {
-        resetButton.addActionListener { handleResetClick() }
-    }
-
-    private fun handleResetClick() {
-//        app.resetScore()    // Update the app state
-        owner.updateUI()    // Update the UI to reflect this, via the main window
-    }
-
-    fun updateUI() {
-        // Use app properties to display state
-//        infoLabel.text = "<html>User: ${app.name}<br>Score: ${app.score} points"
-
-//        resetButton.isEnabled = app.score > 0
-    }
-
-    fun show() {
-        val ownerBounds = owner.frame.bounds          // get location of the main window
-        dialog.setLocation(                           // Position next to main window
-            ownerBounds.x + ownerBounds.width + 10,
-            ownerBounds.y
-        )
-
-        dialog.isVisible = true
-    }
-}
