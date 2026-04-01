@@ -99,70 +99,74 @@ class GameWorld {
         // Beartooth Point
         beartoothPoint.south = twoForksLookout
         beartoothPoint.southWest = wapitiMeadow
+        beartoothPoint.west = thorofareBasin
 
-        // Ruby River
-        rubyRiver.north = twoForksLookout
-        rubyRiver.northWest = thunderCanyon
-        rubyRiver.west = cottonWoodCreek
+        // Thoroughfare Basin
+        thorofareBasin.southWest = wapitiMeadow
+        thorofareBasin.east = beartoothPoint
 
-        // Cottonwood Creek
-        cottonWoodCreek.east = rubyRiver
-        cottonWoodCreek.west = fiveMileCreek
-        cottonWoodCreek.north = thunderCanyon
+        // Wapiti Meadow
+        wapitiMeadow.southEast = mulePoint
+        wapitiMeadow.northEast = thorofareBasin
 
-        // Five Mile Creek
-        fiveMileCreek.east = cottonWoodCreek
-        fiveMileCreek.northEast = jonesyLake
-
-        // Jonesy Lake
-        jonesyLake.southWest = fiveMileCreek
-        jonesyLake.east = thunderCanyon
+        // Mule Point
+        mulePoint.south = thunderCanyon
+        mulePoint.northWest = wapitiMeadow
 
         // Thunder Canyon
-        thunderCanyon.south = cottonWoodCreek
         thunderCanyon.southEast = twoForksLookout
         thunderCanyon.west = jonesyLake
         thunderCanyon.north = mulePoint
 
-        // Mule Point
-        mulePoint.south = thunderCanyon
-        mulePoint.north = wapitiMeadow
+        // Jonesy Lake
+        jonesyLake.southEast = fiveMileCreek
+        jonesyLake.east = thunderCanyon
 
-        // Wapiti Meadow
-        wapitiMeadow.south = mulePoint
-        wapitiMeadow.north = thorofareBasin
-        wapitiMeadow.northEast = beartoothPoint
+        // Five Mile Creek
+        fiveMileCreek.east = cottonWoodCreek
+        fiveMileCreek.northWest = jonesyLake
 
-        // Thoroughfare Basin
-        thorofareBasin.south = wapitiMeadow
+        // Cottonwood Creek
+        cottonWoodCreek.northEast = rubyRiver
+        cottonWoodCreek.west = fiveMileCreek
+
+        // Ruby River
+        rubyRiver.north = twoForksLookout
+        rubyRiver.southWest = cottonWoodCreek
 
     }
 
 
 }
-
-
-class GamePlay(val gameWorld: GameWorld, var currentLocation: Location){
-    fun currentLocation() {
-        currentLocation = gameWorld.locations[9]
-        println(currentLocation)
-    }
-
 
 
 }
 /**
  * Main UI window, handles user clicks, etc.
  *
- * @param GameWorld the app state object
+ * @param gameWorld the app state object
  */
-class MainWindow(val GameWorld: GameWorld) {
+class MainWindow(val gameWorld: GameWorld) {
+
+    fun currentLocation(currentLocation: Location) {
+        currentLocation = gameWorld.locations[9]
+    }
+
+
+        fun description() {
+            (currentLocation.description)
+        }
+
+
+
     val frame = JFrame("Firewatch Game")
     private val panel = JPanel().apply { layout = null }
 
     private val titleLabel = JLabel("Firewatch")
 
     private val userInput = JLabel()
+
+    private val descriptionText = JLabel()
 
 
 
@@ -179,11 +183,14 @@ class MainWindow(val GameWorld: GameWorld) {
 
         titleLabel.setBounds(30, 30, 340, 30)
         userInput.setBounds(30, 90, 340, 30)
+        descriptionText.setBounds(60, 50, 340, 30)
 
         panel.add(titleLabel)
         panel.add(userInput)
+        panel.add(descriptionText)
 
     }
+
 
     private fun setupStyles() {
         titleLabel.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
@@ -209,21 +216,8 @@ class MainWindow(val GameWorld: GameWorld) {
         updateUI()                  // Update this window UI to reflect this
     }
 
-    private fun handleInfoClick() {
-
-    }
 
     fun updateUI() {
-//        infoLabel.text = "User ${app.name} has ${app.score} points"
-
-//        if (app.maxScoreReached()) {
-//            clickButton.text = "No More!"
-//            clickButton.isEnabled = false
-//        } else {
-//            clickButton.text = "Click Me!"
-//            clickButton.isEnabled = true
-//        }
-
 
     }
 
