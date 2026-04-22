@@ -75,8 +75,8 @@ class GameWorld {
         val rubyRiver = Location("Ruby River", "River", "A large, fast-moving river that shapes " +
                 "the landscape. It acts as a natural boundary and adds to the rugged feel of the area.")
 
-        val twoForksLookout = Location("Two-Forks Lookout", "Lookout", "Henry’s fire tower and main" +
-                " base of operations. It serves as both a safe space and a symbol of solitude throughout the story.")
+        val twoForksLookout = Location("Two-Forks Lookout", "Lookout", "A tall wooden lookout " +
+                "tower with wide views over the surrounding forest.")
 
       //add them
 
@@ -140,7 +140,7 @@ class GameWorld {
 }
 
 
-}
+
 /**
  * Main UI window, handles user clicks, etc.
  *
@@ -148,16 +148,7 @@ class GameWorld {
  */
 class MainWindow(val gameWorld: GameWorld) {
 
-    fun currentLocation(currentLocation: Location) {
-        currentLocation = gameWorld.locations[9]
-    }
-
-
-        fun description() {
-            (currentLocation.description)
-        }
-
-
+    var currentLocation: Location = gameWorld.locations[9]
 
     val frame = JFrame("Firewatch Game")
     private val panel = JPanel().apply { layout = null }
@@ -167,6 +158,18 @@ class MainWindow(val gameWorld: GameWorld) {
     private val userInput = JLabel()
 
     private val descriptionText = JLabel()
+
+    private val northButton = JButton()
+    private val northEastButton = JButton()
+    private val eastButton = JLabel()
+    private val southEastButton = JButton()
+    private val southButton = JButton()
+    private val southWestButton = JButton()
+    private val westButton = JLabel()
+    private val northWestButton = JButton()
+
+
+
 
 
 
@@ -181,13 +184,39 @@ class MainWindow(val gameWorld: GameWorld) {
     private fun setupLayout() {
         panel.preferredSize = java.awt.Dimension(1500, 800)
 
-        titleLabel.setBounds(30, 30, 340, 30)
+        titleLabel.setBounds(650, 30, 340, 30)
         userInput.setBounds(30, 90, 340, 30)
-        descriptionText.setBounds(60, 50, 340, 30)
+        descriptionText.setBounds(400, 120, 1000, 120)
+
+
+        northWestButton.setBounds(600, 450, 90, 40)
+
+        northButton.setBounds(700, 450, 90, 40)
+
+        northEastButton.setBounds(800, 450, 90, 40)
+
+        westButton.setBounds(600, 510, 90, 40)
+
+        southButton.setBounds(700, 510, 90, 40)
+
+        eastButton.setBounds(800, 510, 90, 40)
+
+        southWestButton.setBounds(600, 570, 90, 40)
+
+        southEastButton.setBounds(800, 570, 90, 40)
 
         panel.add(titleLabel)
         panel.add(userInput)
         panel.add(descriptionText)
+
+        panel.add(northButton)
+        panel.add(northEastButton)
+        panel.add(eastButton)
+        panel.add(southEastButton)
+        panel.add(southButton)
+        panel.add(southWestButton)
+        panel.add(westButton)
+        panel.add(northWestButton)
 
     }
 
@@ -195,7 +224,7 @@ class MainWindow(val gameWorld: GameWorld) {
     private fun setupStyles() {
         titleLabel.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
         userInput.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
-
+        descriptionText.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
 
     }
 
@@ -218,6 +247,16 @@ class MainWindow(val gameWorld: GameWorld) {
 
 
     fun updateUI() {
+        descriptionText.text = currentLocation.description
+
+        northButton.isEnabled = currentLocation.north != null
+        northEastButton.isEnabled = currentLocation.northEast != null
+        eastButton.isEnabled = currentLocation.east != null
+        southEastButton.isEnabled = currentLocation.southEast != null
+        southButton.isEnabled = currentLocation.south != null
+        southWestButton.isEnabled = currentLocation.southWest != null
+        westButton.isEnabled = currentLocation.west != null
+        northWestButton.isEnabled = currentLocation.northWest != null
 
     }
 
