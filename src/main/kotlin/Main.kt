@@ -141,6 +141,12 @@ class GameWorld {
 
 
 
+    fun destination(destination: Location) {
+
+    }
+
+
+
 /**
  * Main UI window, handles user clicks, etc.
  *
@@ -159,17 +165,14 @@ class MainWindow(val gameWorld: GameWorld) {
 
     private val descriptionText = JLabel()
 
-    private val northButton = JButton()
-    private val northEastButton = JButton()
-    private val eastButton = JLabel()
-    private val southEastButton = JButton()
-    private val southButton = JButton()
-    private val southWestButton = JButton()
-    private val westButton = JLabel()
-    private val northWestButton = JButton()
-
-
-
+    private val northButton = JButton("North")
+    private val northEastButton = JButton("NE")
+    private val eastButton = JButton("East")
+    private val southEastButton = JButton("SE")
+    private val southButton = JButton("South")
+    private val southWestButton = JButton("SW")
+    private val westButton = JButton("West")
+    private val northWestButton = JButton("NW")
 
 
 
@@ -197,7 +200,7 @@ class MainWindow(val gameWorld: GameWorld) {
 
         westButton.setBounds(600, 510, 90, 40)
 
-        southButton.setBounds(700, 510, 90, 40)
+        southButton.setBounds(700, 570, 90, 40)
 
         eastButton.setBounds(800, 510, 90, 40)
 
@@ -237,10 +240,18 @@ class MainWindow(val gameWorld: GameWorld) {
     }
 
     private fun setupActions() {
+        northButton.addActionListener { handleButtonClick(currentLocation.north) }
+        northEastButton.addActionListener { handleButtonClick() }
+        eastButton.addActionListener { handleButtonClick() }
+        southEastButton.addActionListener { handleButtonClick() }
+        southButton.addActionListener { handleButtonClick() }
+        southWestButton.addActionListener { handleButtonClick() }
+        westButton.addActionListener { handleButtonClick() }
+        northWestButton.addActionListener { handleButtonClick() }
 
     }
 
-    private fun handleMainClick() {
+    private fun handleButtonClick() {
 
         updateUI()                  // Update this window UI to reflect this
     }
