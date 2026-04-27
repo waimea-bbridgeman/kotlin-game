@@ -20,6 +20,7 @@ class Location(
     val name: String,
     val type: String, // forest, lookout, cave, lake, etc.
     val description: String
+    val requiredItem: String? = null
 
 ) {
     var north: Location? = null
@@ -39,6 +40,7 @@ class Location(
  */
 class GameWorld {
     val locations = mutableListOf<Location>()
+    val inventory = mutableSetOf<String>()
 
 
     init {
@@ -61,7 +63,7 @@ class GameWorld {
 
         val thunderCanyon = Location("Thunder Canyon", "Canyon", "A dramatic canyon with steep " +
                 "walls and a rushing river below. The echoing water creates a powerful but slightly claustrophobic " +
-                "atmosphere.")
+                "atmosphere.", "rope")
 
         val jonesyLake = Location("Jonesy Lake", "Lake", " A calm, reflective lake tucked away " +
                 "in the forest. It feels peaceful, though the stillness can seem a bit eerie.")
@@ -138,13 +140,6 @@ class GameWorld {
 
 
 }
-
-
-
-    fun destination(destination: Location) {
-
-    }
-
 
 
 /**
@@ -241,19 +236,21 @@ class MainWindow(val gameWorld: GameWorld) {
 
     private fun setupActions() {
         northButton.addActionListener { handleButtonClick(currentLocation.north) }
-        northEastButton.addActionListener { handleButtonClick() }
-        eastButton.addActionListener { handleButtonClick() }
-        southEastButton.addActionListener { handleButtonClick() }
-        southButton.addActionListener { handleButtonClick() }
-        southWestButton.addActionListener { handleButtonClick() }
-        westButton.addActionListener { handleButtonClick() }
-        northWestButton.addActionListener { handleButtonClick() }
+        northEastButton.addActionListener { handleButtonClick(currentLocation.northEast) }
+        eastButton.addActionListener { handleButtonClick(currentLocation.east) }
+        southEastButton.addActionListener { handleButtonClick(currentLocation.southEast) }
+        southButton.addActionListener { handleButtonClick(currentLocation.south) }
+        southWestButton.addActionListener { handleButtonClick(currentLocation.southWest) }
+        westButton.addActionListener { handleButtonClick(currentLocation.west) }
+        northWestButton.addActionListener { handleButtonClick(currentLocation.northWest) }
 
     }
 
-    private fun handleButtonClick() {
-
-        updateUI()                  // Update this window UI to reflect this
+    private fun handleButtonClick(destination: Location?) {
+        if (destination != null) {
+            currentLocation = destination
+            updateUI()
+        }
     }
 
 
