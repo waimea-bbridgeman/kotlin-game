@@ -2,6 +2,7 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf
 import java.awt.Color
 import java.awt.Font
 import javax.swing.*
+import javax.swing.Timer
 
 /**
  * Application entry point
@@ -18,8 +19,8 @@ fun main() {
 
 class Location(
     val name: String,
-    val type: String, // forest, lookout, cave, lake, etc.
-    val description: String
+    val description: String,
+    val directionalInfo: String,
     val requiredItem: String? = null
 
 ) {
@@ -39,48 +40,71 @@ class Location(
  *
  */
 class GameWorld {
+
     val locations = mutableListOf<Location>()
     val inventory = mutableSetOf<String>()
 
+    var timeRemaining = 3
+    val fireTimer = Timer(1000, null) // countdown for the end of the game
+
+    fun reset() {
+        timeRemaining = 3
+        inventory.clear()
+
+
+        fireTimer.restart()
+
+    }
 
     init {
 
+        fireTimer.start()
+
         //setup locations to be added to the list
 
-        val thorofareBasin = Location("Thoroughfare Basin", "Meadow", "A broad, forested " +
+        val thorofareBasin = Location("Thoroughfare Basin", "A broad, forested " +
                 "valley that links many trails and regions. It feels calm at first but gradually becomes more tense " +
-                "as events unfold.")
+                "as events unfold.", "To the southwest is Wapiti Meadow, and to the east is Beartooth Point.")
 
-        val wapitiMeadow = Location("Wapiti Meadow", "Meadow", "A bright, open field surrounded" +
+        val wapitiMeadow = Location("Wapiti Meadow","A bright, open field surrounded" +
                 " by trees, made unsettling by the presence of a secret fenced research area. The contrast makes " +
-                "it one of the eeriest spots." )
+                "it one of the eeriest spots.", "To the southeast is Mule Point, and to the northeast is Thorofare Basin." )
 
-        val beartoothPoint = Location("Beartooth Point", "Meadow", "A high, rocky lookout with " +
-                "wide views over the wilderness. It highlights the scale of the forest and Henry’s isolation.")
+        val beartoothPoint = Location("Beartooth Point", "A high, rocky lookout with " +
+                "wide views over the wilderness. It highlights the scale of the forest and Henry’s isolation.",
+            "To the south is Two Forks Lookout, to the southwest is Wapiti Meadow, and to the west is Thorofare Basin.")
 
-        val mulePoint = Location("Mule Point", "Dead forest", " A quieter overlook with softer " +
-                "terrain and peaceful scenery. It offers a break from the tension found in other areas.")
+        val mulePoint = Location("Mule Point", " A quieter overlook with softer " +
+                "terrain and peaceful scenery. It offers a break from the tension found in other areas.",
+            "To the south is Thunder Canyon, and to the northwest is Wapiti Meadow.")
 
-        val thunderCanyon = Location("Thunder Canyon", "Canyon", "A dramatic canyon with steep " +
+        val thunderCanyon = Location("Thunder Canyon", "A dramatic canyon with steep " +
                 "walls and a rushing river below. The echoing water creates a powerful but slightly claustrophobic " +
-                "atmosphere.", "rope")
+                "atmosphere.", "To the southeast is Two Forks Lookout, to the west is Jonesy Lake, " +
+                "and to the north is Mule Point.", "rope")
 
-        val jonesyLake = Location("Jonesy Lake", "Lake", " A calm, reflective lake tucked away " +
-                "in the forest. It feels peaceful, though the stillness can seem a bit eerie.")
+        val jonesyLake = Location("Jonesy Lake", " A calm, reflective lake tucked away " +
+                "in the forest. It feels peaceful, though the stillness can seem a bit eerie.",
+            "To the southeast is Five Mile Creek, and to the east is Thunder Canyon.")
 
-        val fiveMileCreek = Location("Five Mile Creek", "Creek", "A lively creek running through " +
-                "wooded areas, adding sound and movement. It enhances the natural immersion of the environment.")
+        val fiveMileCreek = Location("Five Mile Creek", "A lively creek running through " +
+                "wooded areas, adding sound and movement. It enhances the natural immersion of the environment.",
+            "To the east is Cottonwood Creek, and to the northwest is Jonesy Lake.")
 
-        val cottonWoodCreek = Location("CottonWood Creek", "Creek", "A more remote and quiet creek" +
-                " in less-traveled terrain. It feels deeper in the wilderness and more isolated. ")
 
-        val rubyRiver = Location("Ruby River", "River", "A large, fast-moving river that shapes " +
-                "the landscape. It acts as a natural boundary and adds to the rugged feel of the area.")
+        val cottonWoodCreek = Location("CottonWood Creek",  "A more remote and quiet creek" +
+                " in less-traveled terrain. It feels deeper in the wilderness and more isolated.",
+            "To the northeast is Ruby River, and to the west is Five Mile Creek.")
 
-        val twoForksLookout = Location("Two-Forks Lookout", "Lookout", "A tall wooden lookout " +
-                "tower with wide views over the surrounding forest.")
+        val rubyRiver = Location("Ruby River", "A large, fast-moving river that shapes " +
+                "the landscape. It acts as a natural boundary and adds to the rugged feel of the area.",
+            "To the north is Two Forks Lookout, and to the southwest is Cottonwood Creek.",
+            "Raft",)
 
-      //add them
+        val twoForksLookout = Location("Two-Forks Lookout", "A tall wooden lookout " +
+                "tower with wide views over the surrounding forest.","To the north is Beartooth Point, " +
+                "to the northwest is Thunder Canyon, and to the south is Ruby River.")
+
 
         locations.add(thorofareBasin)
         locations.add(wapitiMeadow)
@@ -136,11 +160,10 @@ class GameWorld {
         rubyRiver.north = twoForksLookout
         rubyRiver.southWest = cottonWoodCreek
 
+
     }
 
-
 }
-
 
 /**
  * Main UI window, handles user clicks, etc.
@@ -149,16 +172,19 @@ class GameWorld {
  */
 class MainWindow(val gameWorld: GameWorld) {
 
+
+
     var currentLocation: Location = gameWorld.locations[9]
 
     val frame = JFrame("Firewatch Game")
     private val panel = JPanel().apply { layout = null }
 
-    private val titleLabel = JLabel("Firewatch")
-
-    private val userInput = JLabel()
+    private val locationName = JLabel()
 
     private val descriptionText = JLabel()
+
+    private val directionalInfo = JLabel()
+
 
     private val northButton = JButton("North")
     private val northEastButton = JButton("NE")
@@ -182,9 +208,11 @@ class MainWindow(val gameWorld: GameWorld) {
     private fun setupLayout() {
         panel.preferredSize = java.awt.Dimension(1500, 800)
 
-        titleLabel.setBounds(650, 30, 340, 30)
-        userInput.setBounds(30, 90, 340, 30)
-        descriptionText.setBounds(400, 120, 1000, 120)
+        locationName.setBounds(150, 30, 1000, 120)
+
+        descriptionText.setBounds(150, 120, 1000, 120)
+
+        directionalInfo.setBounds(150, 160, 1000, 120)
 
 
         northWestButton.setBounds(600, 450, 90, 40)
@@ -203,9 +231,11 @@ class MainWindow(val gameWorld: GameWorld) {
 
         southEastButton.setBounds(800, 570, 90, 40)
 
-        panel.add(titleLabel)
-        panel.add(userInput)
+
+        panel.add(locationName)
         panel.add(descriptionText)
+        panel.add(directionalInfo)
+
 
         panel.add(northButton)
         panel.add(northEastButton)
@@ -220,9 +250,9 @@ class MainWindow(val gameWorld: GameWorld) {
 
 
     private fun setupStyles() {
-        titleLabel.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
-        userInput.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
+        locationName.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
         descriptionText.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
+        directionalInfo.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
 
     }
 
@@ -234,7 +264,31 @@ class MainWindow(val gameWorld: GameWorld) {
         frame.setLocationRelativeTo(null)                   // Centre on the screen
     }
 
+
+    private fun handleClockTick() {
+        gameWorld.timeRemaining--
+
+        updateUI()
+
+        if (gameWorld.timeRemaining == 0) {
+            val option = JOptionPane.showConfirmDialog(
+                frame,
+                "You shouldn't become a firefighter. You let the forest burn down! \n \n Start a new game?"
+            )
+
+            if (option == JOptionPane.YES_OPTION) {
+                gameWorld.reset()
+
+                currentLocation = gameWorld.locations[9]
+                updateUI()
+            }
+           else {
+               frame.dispose()
+            }
+        }
+    }
     private fun setupActions() {
+        gameWorld.fireTimer.addActionListener { handleClockTick() }
         northButton.addActionListener { handleButtonClick(currentLocation.north) }
         northEastButton.addActionListener { handleButtonClick(currentLocation.northEast) }
         eastButton.addActionListener { handleButtonClick(currentLocation.east) }
@@ -256,6 +310,10 @@ class MainWindow(val gameWorld: GameWorld) {
 
     fun updateUI() {
         descriptionText.text = currentLocation.description
+
+        directionalInfo.text = currentLocation.directionalInfo
+
+        locationName.text = currentLocation.name
 
         northButton.isEnabled = currentLocation.north != null
         northEastButton.isEnabled = currentLocation.northEast != null
