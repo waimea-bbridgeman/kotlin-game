@@ -3,6 +3,8 @@ import java.awt.Color
 import java.awt.Font
 import javax.swing.*
 import javax.swing.Timer
+import java.awt.KeyboardFocusManager
+import java.awt.event.KeyEvent
 
 /**
  * Application entry point
@@ -44,11 +46,17 @@ class GameWorld {
     val locations = mutableListOf<Location>()
     val inventory = mutableSetOf<String>()
 
-    var timeRemaining = 3
+    var timeRemaining = 300
     val fireTimer = Timer(1000, null) // countdown for the end of the game
 
+    fun itemsRandom() {
+        for (requiredItems in locations) {
+            locations.random()
+        }
+    }
+
     fun reset() {
-        timeRemaining = 3
+        timeRemaining = 300
         inventory.clear()
 
 
@@ -59,6 +67,7 @@ class GameWorld {
     init {
 
         fireTimer.start()
+
 
         //setup locations to be added to the list
 
@@ -172,7 +181,24 @@ class GameWorld {
  */
 class MainWindow(val gameWorld: GameWorld) {
 
+    private fun keyPress() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+            .addKeyEventDispatcher { i ->
+                if (i.id == KeyEvent.KEY_PRESSED) {
+                    instructions(i.keyCode)
+                }
+                false   // Return false to let the event continue to other components
+            }
+    }
 
+    private fun instructions(keyCode: Int) {
+
+        when (keyCode) {
+            KeyEvent.VK_I  ->  JOptionPane.showMessageDialog(frame,"Your goal is to find a bucket fill it up at the lake and reach the fire before the forest burns down. " +
+                    "The bucket can be found at a random location across the map.")
+
+        }
+    }
 
     var currentLocation: Location = gameWorld.locations[9]
 
@@ -180,11 +206,10 @@ class MainWindow(val gameWorld: GameWorld) {
     private val panel = JPanel().apply { layout = null }
 
     private val locationName = JLabel()
-
     private val descriptionText = JLabel()
-
     private val directionalInfo = JLabel()
 
+    private val instructionLabel = JLabel("I")
 
     private val northButton = JButton("North")
     private val northEastButton = JButton("NE")
@@ -209,32 +234,25 @@ class MainWindow(val gameWorld: GameWorld) {
         panel.preferredSize = java.awt.Dimension(1500, 800)
 
         locationName.setBounds(150, 30, 1000, 120)
-
         descriptionText.setBounds(150, 120, 1000, 120)
-
         directionalInfo.setBounds(150, 160, 1000, 120)
 
+       // instructionLabel.setBounds()
 
         northWestButton.setBounds(600, 450, 90, 40)
-
         northButton.setBounds(700, 450, 90, 40)
-
         northEastButton.setBounds(800, 450, 90, 40)
-
         westButton.setBounds(600, 510, 90, 40)
-
         southButton.setBounds(700, 570, 90, 40)
-
         eastButton.setBounds(800, 510, 90, 40)
-
         southWestButton.setBounds(600, 570, 90, 40)
-
         southEastButton.setBounds(800, 570, 90, 40)
 
 
         panel.add(locationName)
         panel.add(descriptionText)
         panel.add(directionalInfo)
+        panel.add(instructionLabel)
 
 
         panel.add(northButton)
@@ -253,6 +271,7 @@ class MainWindow(val gameWorld: GameWorld) {
         locationName.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
         descriptionText.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
         directionalInfo.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
+        instructionLabel.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
 
     }
 
@@ -271,10 +290,7 @@ class MainWindow(val gameWorld: GameWorld) {
         updateUI()
 
         if (gameWorld.timeRemaining == 0) {
-            val option = JOptionPane.showConfirmDialog(
-                frame,
-                "You shouldn't become a firefighter. You let the forest burn down! \n \n Start a new game?"
-            )
+            val option = JOptionPane.showConfirmDialog(frame,"You shouldn't become a firefighter. You let the forest burn down! \n \n Start a new game?")
 
             if (option == JOptionPane.YES_OPTION) {
                 gameWorld.reset()
@@ -287,6 +303,7 @@ class MainWindow(val gameWorld: GameWorld) {
             }
         }
     }
+
     private fun setupActions() {
         gameWorld.fireTimer.addActionListener { handleClockTick() }
         northButton.addActionListener { handleButtonClick(currentLocation.north) }
@@ -301,10 +318,18 @@ class MainWindow(val gameWorld: GameWorld) {
     }
 
     private fun handleButtonClick(destination: Location?) {
-        if (destination != null) {
-            currentLocation = destination
-            updateUI()
+        if (destination == null) return
+
+        val required = destination.requiredItem
+
+        if (required != null && !gameWorld.inventory.contains(required)) {
+            JOptionPane.showMessageDialog(frame,"You need a $required to go there.")
+
+            return
         }
+
+        currentLocation = destination
+        updateUI()
     }
 
 
