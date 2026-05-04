@@ -23,7 +23,7 @@ class Location(
     val name: String,
     val description: String,
     val directionalInfo: String,
-    val requiredItem: String? = null
+    var requiredItem: String? = null
 
 ) {
     var north: Location? = null
@@ -42,16 +42,23 @@ class Location(
  *
  */
 class GameWorld {
+    //Sets locations, starts the timer for the fire, places required items into a random location
 
     val locations = mutableListOf<Location>()
     val inventory = mutableSetOf<String>()
+    val items = mutableListOf<String>()
 
-    var timeRemaining = 300
+    var timeRemaining = 3
     val fireTimer = Timer(1000, null) // countdown for the end of the game
 
     fun itemsRandom() {
-        for (requiredItems in locations) {
-            locations.random()
+        items.add("rope")
+        items.add("bucket")
+        items.add("raft")
+
+        for (item in items) {
+            val randomLocation = locations.random()
+
         }
     }
 
@@ -126,46 +133,36 @@ class GameWorld {
         locations.add(rubyRiver)
         locations.add(twoForksLookout)
 
-        // Two Forks Lookout
         twoForksLookout.north = beartoothPoint
         twoForksLookout.northWest = thunderCanyon
         twoForksLookout.south = rubyRiver
 
-        // Beartooth Point
         beartoothPoint.south = twoForksLookout
         beartoothPoint.southWest = wapitiMeadow
         beartoothPoint.west = thorofareBasin
 
-        // Thoroughfare Basin
         thorofareBasin.southWest = wapitiMeadow
         thorofareBasin.east = beartoothPoint
 
-        // Wapiti Meadow
         wapitiMeadow.southEast = mulePoint
         wapitiMeadow.northEast = thorofareBasin
 
-        // Mule Point
         mulePoint.south = thunderCanyon
         mulePoint.northWest = wapitiMeadow
 
-        // Thunder Canyon
         thunderCanyon.southEast = twoForksLookout
         thunderCanyon.west = jonesyLake
         thunderCanyon.north = mulePoint
 
-        // Jonesy Lake
         jonesyLake.southEast = fiveMileCreek
         jonesyLake.east = thunderCanyon
 
-        // Five Mile Creek
         fiveMileCreek.east = cottonWoodCreek
         fiveMileCreek.northWest = jonesyLake
 
-        // Cottonwood Creek
         cottonWoodCreek.northEast = rubyRiver
         cottonWoodCreek.west = fiveMileCreek
 
-        // Ruby River
         rubyRiver.north = twoForksLookout
         rubyRiver.southWest = cottonWoodCreek
 
@@ -181,18 +178,19 @@ class GameWorld {
  */
 class MainWindow(val gameWorld: GameWorld) {
 
+    //if the 'i' key is press instructions appear for the user
     private fun keyPress() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager()
             .addKeyEventDispatcher { i ->
                 if (i.id == KeyEvent.KEY_PRESSED) {
                     instructions(i.keyCode)
                 }
-                false   // Return false to let the event continue to other components
+                false
             }
     }
 
+    //The message that appears after 'i' is pressed
     private fun instructions(keyCode: Int) {
-
         when (keyCode) {
             KeyEvent.VK_I  ->  JOptionPane.showMessageDialog(frame,"Your goal is to find a bucket fill it up at the lake and reach the fire before the forest burns down. " +
                     "The bucket can be found at a random location across the map.")
@@ -237,7 +235,6 @@ class MainWindow(val gameWorld: GameWorld) {
         descriptionText.setBounds(150, 120, 1000, 120)
         directionalInfo.setBounds(150, 160, 1000, 120)
 
-       // instructionLabel.setBounds()
 
         northWestButton.setBounds(600, 450, 90, 40)
         northButton.setBounds(700, 450, 90, 40)
@@ -285,10 +282,13 @@ class MainWindow(val gameWorld: GameWorld) {
 
 
     private fun handleClockTick() {
+        //everytime the timer ticks this functions minus' 1 from the remaining time.
+
         gameWorld.timeRemaining--
 
         updateUI()
 
+        //if you run out of time it lets the user play again or exit
         if (gameWorld.timeRemaining == 0) {
             val option = JOptionPane.showConfirmDialog(frame,"You shouldn't become a firefighter. You let the forest burn down! \n \n Start a new game?")
 
@@ -318,10 +318,12 @@ class MainWindow(val gameWorld: GameWorld) {
     }
 
     private fun handleButtonClick(destination: Location?) {
+        //responds to the user interacting with the buttons and changes location accordingly
         if (destination == null) return
 
         val required = destination.requiredItem
 
+        //Does the player have the required item?
         if (required != null && !gameWorld.inventory.contains(required)) {
             JOptionPane.showMessageDialog(frame,"You need a $required to go there.")
 
@@ -339,6 +341,8 @@ class MainWindow(val gameWorld: GameWorld) {
         directionalInfo.text = currentLocation.directionalInfo
 
         locationName.text = currentLocation.name
+
+        instructionLabel.text = instructionLabel.toString()
 
         northButton.isEnabled = currentLocation.north != null
         northEastButton.isEnabled = currentLocation.northEast != null

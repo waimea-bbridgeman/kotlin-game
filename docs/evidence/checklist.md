@@ -13,16 +13,16 @@ The game functions correctly and meets the specification:
 - [x] The game has a **GUI** with a range of controls
 - [ ] The **instructions** for the game are available via the GUI
 - [x] Player provides game **inputs via the GUI** (e.g. moves, actions)
-- [ ] The **current status** of the game is **shown in the GUI**, updated each player input
+- [x] The **current status** of the game is **shown in the GUI**, updated each player input
 - [x] The game is based on a **non-trivial map**
 - [x] The player can **move between locations**
 - [ ] The player has a **clear purpose** they can attempt to achieve
-- [ ] A **win / end / loss state** is possible
+- [x] A **win / end / loss state** is possible
 
 ### Program Code
 
 The program stores data using:
-- [ ] **Variables** of at least two types (e.g. int, text, boolean)
+- [x] **Variables** of at least two types (e.g. int, text, boolean)
 
 The program structure:
 - [x] Defines and implements a **graphical user interface (GUI)**
@@ -30,15 +30,15 @@ The program structure:
 - [x] Uses **functions** / **methods** to break up the code logically
 - [ ] Contains **sequences** of instructions
 - [ ] Uses **conditional** instructions to control the program flow
-- [ ] Uses program **branches** (if...else, when, etc.)
-- [ ] Uses **iteration** (loops) to repeat things (for, while, etc.)
+- [x] Uses program **branches** (if...else, when, etc.)
+- [x] Uses **iteration** (loops) to repeat things (for, while, etc.)
 
 ### Program Documentation
 
 The program code:
 - [ ] Is **indented** correctly
 - [ ] Is **laid-out clearly**
-- [ ] Contains **comments** that help in understanding how it works
+- [x] Contains **comments** that help in understanding how it works
 
 ### Program Testing
 

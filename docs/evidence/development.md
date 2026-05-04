@@ -10,27 +10,27 @@ The development log captures key moments in your application development:
 
 ---
 
-## Date: xx/xx/20xx
+## Date: 19/04/2026
 
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
+Player can move between locations 
 
-![example.png](screenshots/example.png)
-
----
-
-## Date: xx/xx/20xx
-
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
-
-![example.png](screenshots/example.png)
+![player-movement.gif](screenshots/player-movement.gif)
 
 ---
 
-## Date: xx/xx/20xx
+## Date: 24/04/2026
 
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
+Players movement is restricted if they don't have the required item.
 
-![example.png](screenshots/example.png)
+![player-movement.gif](screenshots/player-movement.gif)
+
+---
+
+## Date: 29/04/2026
+
+If the player doesn't extinguish the fire before the timer runs out then the game ends
+
+![timeout.gif](screenshots/timeout.gif)
 
 ---
 
