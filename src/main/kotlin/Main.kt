@@ -6,6 +6,9 @@ import javax.swing.Timer
 import java.awt.KeyboardFocusManager
 import java.awt.event.KeyEvent
 
+fun ImageIcon.scaled(width: Int, height: Int): ImageIcon =
+    ImageIcon(image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH))
+
 /**
  * Application entry point
  */
@@ -49,25 +52,42 @@ class GameWorld {
     val inventory = mutableSetOf<String>()
     val items = mutableListOf<String>()
 
+    var fireLocation: Location = Location("", "", "")
+
     var timeRemaining = 300
     val fireTimer = Timer(1000, null) // countdown for the end of the game
 
+    var bucketFull = false
+
+
+
     fun itemsRandom() {
-        items.add("rope")
-        items.add("bucket")
-        items.add("raft")
+        items.add("Rope")
+        items.add("Bucket")
+        items.add("Raft")
 
+        //List of locations a required item can be at without putting them somewhere that needs a required item to enter
+        val eligible = mutableListOf<Location>()
+        for (location in locations) {
+            if (location.requiredItem == null) {
+                eligible.add(location)
+            }
+        }
+
+        // Place each item at a random eligible location and removing it so that you don't have two items in the same place
         for (item in items) {
-            val randomLocation = locations.random()
-
+            val spot = eligible.random()
+            spot.itemHere = item
+            eligible.remove(spot)
         }
     }
 
-
+    //Save the last picked up item so that when i remove it from the location (so the message doesn't repeat everytime)
+    //it can be used by MainWindow to say "you picked up ..."
+    var lastPickedUp = ""
 
     fun tryMove(destination: Location): String {
         val required = destination.requiredItem
-
         if (required != null && !inventory.contains(required)) {
             return "BLOCKED"
         }
@@ -76,17 +96,45 @@ class GameWorld {
         if (found != null) {
             inventory.add(found)
             destination.itemHere = null
-            return "PICKED UP $found"
+            lastPickedUp = found
+            return "PICKED UP"
+        }
+
+        if (destination.name == "Jonesy Lake" && inventory.contains("bucket")) {
+            bucketFull = true
+            return "BUCKET FILLED"
+        }
+
+        if (destination == fireLocation && !bucketFull) {
+            return "FIRE"
+        }
+
+        if (destination == fireLocation && bucketFull) {
+            return "WIN"
         }
 
         return "MOVED"
     }
 
     fun reset() {
-        timeRemaining = 300
+        //Re-pick the fire location
+        val fireEligible = mutableListOf<Location>()
+        for (location in locations) {
+            if (location.requiredItem == null) {
+                fireEligible.add(location)
+            }
+        }
+        fireLocation = fireEligible.random()
+
+        //Clear where the items are
+        for (location in locations) {
+            location.itemHere = null
+        }
+
         inventory.clear()
-
-
+        bucketFull = false
+        itemsRandom()
+        timeRemaining = 300
         fireTimer.restart()
 
     }
@@ -176,6 +224,7 @@ class GameWorld {
             locations.add(rubyRiver)
             locations.add(twoForksLookout)
 
+            //Connect all the locations together
             twoForksLookout.north = beartoothPoint
             twoForksLookout.northWest = thunderCanyon
             twoForksLookout.south = rubyRiver
@@ -209,10 +258,17 @@ class GameWorld {
             rubyRiver.north = twoForksLookout
             rubyRiver.southWest = cottonWoodCreek
 
+            itemsRandom()
 
+            //Pick a place for the fire to be, making sure that if an item is required the fire can't spawn there
+            val fireEligible = mutableListOf<Location>()
+            for (location in locations) {
+                if (location.requiredItem == null) {
+                    fireEligible.add(location)
+                }
+            }
+            fireLocation = fireEligible.random()
         }
-
-
 }
     /**
      * Main UI window, handles user clicks, etc.
@@ -237,14 +293,20 @@ class GameWorld {
             when (keyCode) {
                 KeyEvent.VK_I -> JOptionPane.showMessageDialog(
                     frame,
-                    "Your goal is to find a bucket fill it up at the lake and reach the fire before the forest burns down. " +
+                    "A fire has started at a random location on the map! Your goal is to find a bucket and fill it " +
+                            "up at the lake and reach the fire before the forest burns down. " +
                             "The bucket can be found at a random location across the map."
                 )
 
             }
         }
 
+
+
         var currentLocation: Location = gameWorld.locations[9]
+
+        val mapIcon = ImageIcon(ClassLoader.getSystemResource("images/firewatchMap.jpg")).scaled(400,400)
+
 
         val frame = JFrame("Firewatch Game")
         private val panel = JPanel().apply { layout = null }
@@ -252,6 +314,7 @@ class GameWorld {
         private val locationName = JLabel()
         private val descriptionText = JLabel()
         private val directionalInfo = JLabel()
+        private val mapLabel = JLabel(mapIcon)
 
         private val instructionLabel = JLabel("I")
 
@@ -280,7 +343,8 @@ class GameWorld {
             locationName.setBounds(150, 30, 1000, 120)
             descriptionText.setBounds(150, 120, 1000, 120)
             directionalInfo.setBounds(150, 160, 1000, 120)
-
+            instructionLabel.setBounds(150, 700, 400, 40)
+            mapLabel.setBounds(1050, 30, 400, 300)
 
             northWestButton.setBounds(600, 450, 90, 40)
             northButton.setBounds(700, 450, 90, 40)
@@ -296,6 +360,7 @@ class GameWorld {
             panel.add(descriptionText)
             panel.add(directionalInfo)
             panel.add(instructionLabel)
+            panel.add(mapLabel)
 
 
             panel.add(northButton)
@@ -328,8 +393,6 @@ class GameWorld {
 
 
         private fun handleClockTick() {
-            //everytime the timer ticks this functions minus' 1 from the remaining time.
-
             gameWorld.timeRemaining--
 
             updateUI()
@@ -370,16 +433,35 @@ class GameWorld {
 
             val result = gameWorld.tryMove(destination)
 
+            val required = destination.requiredItem
+
             if (result == "BLOCKED") {
-                JOptionPane.showMessageDialog(frame, "You need an item to go there.")
+                JOptionPane.showMessageDialog(frame, "You need a $required to go there.")
                 return
             }
 
             currentLocation = destination
 
-            if (result.startsWith("PICKED UP")) {
-                val item = result.substringAfter("PICKED UP ")
-                JOptionPane.showMessageDialog(frame, "You picked up: $item")
+            if (result == "PICKED UP") {
+                JOptionPane.showMessageDialog(frame, "You picked up: ${gameWorld.lastPickedUp}")
+            }
+
+            if (result == "BUCKET FILLED") {
+                JOptionPane.showMessageDialog(frame, "You filled the bucket with water!")
+            }
+
+            if (result == "WIN") {
+                gameWorld.fireTimer.stop()
+                val option = JOptionPane.showConfirmDialog(frame, "You saved the forest! Play again?")
+                if (option == JOptionPane.YES_OPTION) {
+                    gameWorld.reset()
+                    currentLocation = gameWorld.locations[9]
+                } else {
+                    frame.dispose()
+                }
+            }
+            if (result == "FIRE") {
+                JOptionPane.showMessageDialog(frame, "You found the fire! You need a full bucket of water to put it out.")
             }
 
             updateUI()
@@ -393,7 +475,7 @@ class GameWorld {
 
             locationName.text = currentLocation.name
 
-            instructionLabel.text = instructionLabel.toString()
+            instructionLabel.text = "Press i for instructions"
 
             northButton.isEnabled = currentLocation.north != null
             northEastButton.isEnabled = currentLocation.northEast != null
