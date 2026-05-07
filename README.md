@@ -1,14 +1,12 @@
-# PROJECT NAME HERE
+# Firewatch game 
 
-by YOUR NAME HERE
+by Billy Bridgeman 
 
 ## Project Description
 
-**PLACE YOUR PROJECT DESCRIPTION HERE**
-**PLACE YOUR PROJECT DESCRIPTION HERE**
-**PLACE YOUR PROJECT DESCRIPTION HERE**
-**PLACE YOUR PROJECT DESCRIPTION HERE**
-**PLACE YOUR PROJECT DESCRIPTION HERE**
+My game is based on the game Firewatch. In my version of it the user has to find required items 
+like rope which allow them to enter a location. The main purpose of the game is to find a bucket and fill it up at the lake 
+then they have to find the fire and put it out before the timer runs out. 
 
 ---
 
@@ -34,6 +32,6 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 - Using non-core API, library or framework
 - Using complex data structures (e.g. stacks, queues, trees)
 
-**EDIT LIST ABOVE TO MATCH YOUR PROJECT**
+
 
 

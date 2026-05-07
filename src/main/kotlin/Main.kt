@@ -1,3 +1,15 @@
+/**
+ * =====================================================================
+ * Programming Project for NCEA Level 3, Standard 91906
+ * ---------------------------------------------------------------------
+ * Project Name:   Firewatch
+ * Project Author: Billy Bridgeman
+ * GitHub Repo:    https://github.com/waimea-bbridgeman/kotlin-game
+ * ---------------------------------------------------------------------
+ */
+
+
+
 import com.formdev.flatlaf.themes.FlatMacDarkLaf
 import java.awt.Color
 import java.awt.Font
@@ -54,7 +66,7 @@ class GameWorld {
 
     var fireLocation: Location = Location("", "", "")
 
-    var timeRemaining = 300
+    var timeRemaining = 5
     val fireTimer = Timer(1000, null) // countdown for the end of the game
 
     var bucketFull = false
@@ -125,8 +137,6 @@ class GameWorld {
         }
         fireLocation = fireEligible.random()
 
-        println("Fire is at: ${fireLocation.name}")
-
         //Clear where the items are
         for (location in locations) {
             location.itemHere = null
@@ -136,11 +146,7 @@ class GameWorld {
         bucketFull = false
         items.clear()
         itemsRandom()
-        println("Items placed:")
-        for (location in locations) {
-            println("  ${location.name}: ${location.itemHere}")
-        }
-        timeRemaining = 300
+        timeRemaining = 250
         fireTimer.restart()
 
     }
@@ -153,60 +159,69 @@ class GameWorld {
             //setup locations to be added to the list
 
             val thorofareBasin = Location(
-                "Thoroughfare Basin", "A broad, forested " +
-                        "valley that links many trails and regions. It feels calm at first but gradually becomes more tense " +
-                        "as events unfold.", "To the southwest is Wapiti Meadow, and to the east is Beartooth Point.")
+                "Thoroughfare Basin",
+                "<html>A broad, forested valley that links many trails and regions. " +
+                        "It feels calm at first but gradually feels more like someones watching you.</html>",
+                "<html>To the southwest is Wapiti Meadow, and to the east is Beartooth Point.</html>")
 
             val wapitiMeadow = Location(
                 "Wapiti Meadow",
-                "A bright, open field surrounded" +
-                        " by trees, made unsettling by the presence of a secret fenced research area. The contrast makes " +
-                        "it one of the eeriest spots.",
-                "To the southeast is Mule Point, and to the northeast is Thorofare Basin.")
+                "<html>A bright, open field surrounded by trees, made unsettling by the " +
+                        "presence of a secret fenced research area. The contrast makes it one " +
+                        "of the eeriest spots.</html>",
+                "<html>To the southeast is Mule Point, and to the northeast is Thorofare Basin.</html>")
 
             val beartoothPoint = Location(
-                "Beartooth Point", "A high, rocky lookout with " +
-                        "wide views over the wilderness. It highlights the scale of the forest and Henry’s isolation.",
-                "To the south is Two Forks Lookout, to the southwest is Wapiti Meadow, and to the west is Thorofare Basin.")
+                "Beartooth Point",
+                "<html>A high, rocky lookout with wide views over the wilderness. " +
+                        "It highlights the scale of the forest.</html>",
+                "<html>To the south is Two Forks Lookout, to the southwest is Wapiti Meadow, " +
+                        "and to the west is Thorofare Basin.</html>")
 
             val mulePoint = Location(
-                "Mule Point", " A quieter overlook with softer " +
-                        "terrain and peaceful scenery. It offers a break from the tension found in other areas.",
-                "To the south is Thunder Canyon, and to the northwest is Wapiti Meadow.")
+                "Mule Point",
+                "<html>A quieter overlook with softer terrain and peaceful scenery. " +
+                        "It offers a break from the tension found in other areas.</html>",
+                "<html>To the south is Thunder Canyon, and to the northwest is Wapiti Meadow.</html>")
 
             val thunderCanyon = Location(
-                "Thunder Canyon", "A dramatic canyon with steep " +
-                        "walls and a rushing river below. The echoing water creates a powerful but slightly claustrophobic " +
-                        "atmosphere.", "To the southeast is Two Forks Lookout, to the west is Jonesy Lake, " +
-                        "and to the north is Mule Point.", "Rope")
+                "Thunder Canyon",
+                "<html>A dramatic canyon with steep walls and a rushing river below. " +
+                        "The echoing water creates a powerful but slightly claustrophobic atmosphere.</html>",
+                "<html>To the southeast is Two Forks Lookout, to the west is Jonesy Lake, " +
+                        "and to the north is Mule Point.</html>",
+                "Rope")
 
             val jonesyLake = Location(
-                "Jonesy Lake", " A calm, reflective lake tucked away " +
-                        "in the forest. It feels peaceful, though the stillness can seem a bit eerie.",
-                "To the southeast is Five Mile Creek, and to the east is Thunder Canyon.")
+                "Jonesy Lake",
+                "<html>A calm, reflective lake tucked away in the forest. " +
+                        "It feels peaceful, though the stillness can seem a bit eerie.</html>",
+                "<html>To the southeast is Five Mile Creek, and to the east is Thunder Canyon.</html>")
 
             val fiveMileCreek = Location(
-                "Five Mile Creek", "A lively creek running through " +
-                        "wooded areas, adding sound and movement. It enhances the natural immersion of the environment.",
-                "To the east is Cottonwood Creek, and to the northwest is Jonesy Lake.")
-
+                "Five Mile Creek",
+                "<html>A lively creek running through wooded areas, adding sound and movement. " +
+                        "It enhances the natural immersion of the environment.</html>",
+                "<html>To the east is Cottonwood Creek, and to the northwest is Jonesy Lake.</html>")
 
             val cottonWoodCreek = Location(
-                "CottonWood Creek", "A more remote and quiet creek" +
-                        " in less-traveled terrain. It feels deeper in the wilderness and more isolated.",
-                "To the northeast is Ruby River, and to the west is Five Mile Creek.")
+                "CottonWood Creek",
+                "<html>A more remote and quiet creek in less-traveled terrain. " +
+                        "It feels deeper in the wilderness and more isolated.</html>",
+                "<html>To the northeast is Ruby River, and to the west is Five Mile Creek.</html>")
+
 
             val rubyRiver = Location(
                 "Ruby River",
-                "A large, fast-moving river that shapes " +
-                        "the landscape. It acts as a natural boundary and adds to the rugged feel of the area.",
-                "To the north is Two Forks Lookout, and to the southwest is Cottonwood Creek.")
+                "<html>A large, fast-moving river that shapes the landscape. " +
+                        "It acts as a natural boundary and adds to the rugged feel of the area.</html>",
+                "<html>To the north is Two Forks Lookout, and to the southwest is Cottonwood Creek.</html>")
 
             val twoForksLookout = Location(
-                "Two-Forks Lookout", "A tall wooden lookout " +
-                        "tower with wide views over the surrounding forest.", "To the north is Beartooth Point, " +
-                        "to the northwest is Thunder Canyon, and to the south is Ruby River.")
-
+                "Two-Forks Lookout",
+                "<html>A tall wooden lookout tower with wide views over the surrounding forest.</html>",
+                "<html>To the north is Beartooth Point, to the northwest is Thunder Canyon, " +
+                        "and to the south is Ruby River.</html>")
 
             locations.add(thorofareBasin)
             locations.add(wapitiMeadow)
@@ -335,20 +350,20 @@ class GameWorld {
         private fun setupLayout() {
             panel.preferredSize = java.awt.Dimension(1200, 700)
 
-            locationName.setBounds(150, 30, 1000, 120)
-            descriptionText.setBounds(150, 120, 1000, 120)
-            directionalInfo.setBounds(150, 160, 1000, 120)
-            instructionLabel.setBounds(150, 600, 400, 40)
+            locationName.setBounds(90, 30, 700, 50)
+            descriptionText.setBounds(90, 120, 700, 50)
+            directionalInfo.setBounds(90, 165, 700, 60)
+            instructionLabel.setBounds(90, 600, 400, 40)
             mapLabel.setBounds(820, 20, 350, 350)
 
-            northWestButton.setBounds(600, 450, 90, 40)
-            northButton.setBounds(700, 450, 90, 40)
-            northEastButton.setBounds(800, 450, 90, 40)
-            westButton.setBounds(600, 510, 90, 40)
-            southButton.setBounds(700, 570, 90, 40)
-            eastButton.setBounds(800, 510, 90, 40)
-            southWestButton.setBounds(600, 570, 90, 40)
-            southEastButton.setBounds(800, 570, 90, 40)
+            northWestButton.setBounds(180, 380, 90, 40)
+            northButton.setBounds(280, 380, 90, 40)
+            northEastButton.setBounds(380, 380, 90, 40)
+            westButton.setBounds(180, 440, 90, 40)
+            eastButton.setBounds(380, 440, 90, 40)
+            southWestButton.setBounds(180, 500, 90, 40)
+            southButton.setBounds(280, 500, 90, 40)
+            southEastButton.setBounds(380, 500, 90, 40)
 
 
             panel.add(locationName)

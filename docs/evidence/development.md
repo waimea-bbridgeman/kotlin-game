@@ -34,20 +34,15 @@ If the player doesn't extinguish the fire before the timer runs out then the gam
 
 ---
 
-## Date: xx/xx/20xx
+## Date: 7/05/2026
 
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
+I realised that required items can spawn in locations that need a required item to get to,
+to solve this i removed a required item (the raft) which also allows freer movement for the user. 
 
-![example.png](screenshots/example.png)
-
----
-
-## Date: xx/xx/20xx
-
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
-
-![example.png](screenshots/example.png)
+![removedRaft.gif](screenshots/removedRaft.gif)
 
 ---
+
+
 
 
