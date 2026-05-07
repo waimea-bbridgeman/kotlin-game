@@ -64,7 +64,6 @@ class GameWorld {
     fun itemsRandom() {
         items.add("Rope")
         items.add("Bucket")
-        items.add("Raft")
 
         //List of locations a required item can be at without putting them somewhere that needs a required item to enter
         val eligible = mutableListOf<Location>()
@@ -100,7 +99,7 @@ class GameWorld {
             return "PICKED UP"
         }
 
-        if (destination.name == "Jonesy Lake" && inventory.contains("bucket")) {
+        if (destination.name == "Jonesy Lake" && inventory.contains("Bucket")) {
             bucketFull = true
             return "BUCKET FILLED"
         }
@@ -126,6 +125,8 @@ class GameWorld {
         }
         fireLocation = fireEligible.random()
 
+        println("Fire is at: ${fireLocation.name}")
+
         //Clear where the items are
         for (location in locations) {
             location.itemHere = null
@@ -133,7 +134,12 @@ class GameWorld {
 
         inventory.clear()
         bucketFull = false
+        items.clear()
         itemsRandom()
+        println("Items placed:")
+        for (location in locations) {
+            println("  ${location.name}: ${location.itemHere}")
+        }
         timeRemaining = 300
         fireTimer.restart()
 
@@ -149,68 +155,57 @@ class GameWorld {
             val thorofareBasin = Location(
                 "Thoroughfare Basin", "A broad, forested " +
                         "valley that links many trails and regions. It feels calm at first but gradually becomes more tense " +
-                        "as events unfold.", "To the southwest is Wapiti Meadow, and to the east is Beartooth Point."
-            )
+                        "as events unfold.", "To the southwest is Wapiti Meadow, and to the east is Beartooth Point.")
 
             val wapitiMeadow = Location(
                 "Wapiti Meadow",
                 "A bright, open field surrounded" +
                         " by trees, made unsettling by the presence of a secret fenced research area. The contrast makes " +
                         "it one of the eeriest spots.",
-                "To the southeast is Mule Point, and to the northeast is Thorofare Basin."
-            )
+                "To the southeast is Mule Point, and to the northeast is Thorofare Basin.")
 
             val beartoothPoint = Location(
                 "Beartooth Point", "A high, rocky lookout with " +
                         "wide views over the wilderness. It highlights the scale of the forest and Henry’s isolation.",
-                "To the south is Two Forks Lookout, to the southwest is Wapiti Meadow, and to the west is Thorofare Basin."
-            )
+                "To the south is Two Forks Lookout, to the southwest is Wapiti Meadow, and to the west is Thorofare Basin.")
 
             val mulePoint = Location(
                 "Mule Point", " A quieter overlook with softer " +
                         "terrain and peaceful scenery. It offers a break from the tension found in other areas.",
-                "To the south is Thunder Canyon, and to the northwest is Wapiti Meadow."
-            )
+                "To the south is Thunder Canyon, and to the northwest is Wapiti Meadow.")
 
             val thunderCanyon = Location(
                 "Thunder Canyon", "A dramatic canyon with steep " +
                         "walls and a rushing river below. The echoing water creates a powerful but slightly claustrophobic " +
                         "atmosphere.", "To the southeast is Two Forks Lookout, to the west is Jonesy Lake, " +
-                        "and to the north is Mule Point.", "rope"
-            )
+                        "and to the north is Mule Point.", "Rope")
 
             val jonesyLake = Location(
                 "Jonesy Lake", " A calm, reflective lake tucked away " +
                         "in the forest. It feels peaceful, though the stillness can seem a bit eerie.",
-                "To the southeast is Five Mile Creek, and to the east is Thunder Canyon."
-            )
+                "To the southeast is Five Mile Creek, and to the east is Thunder Canyon.")
 
             val fiveMileCreek = Location(
                 "Five Mile Creek", "A lively creek running through " +
                         "wooded areas, adding sound and movement. It enhances the natural immersion of the environment.",
-                "To the east is Cottonwood Creek, and to the northwest is Jonesy Lake."
-            )
+                "To the east is Cottonwood Creek, and to the northwest is Jonesy Lake.")
 
 
             val cottonWoodCreek = Location(
                 "CottonWood Creek", "A more remote and quiet creek" +
                         " in less-traveled terrain. It feels deeper in the wilderness and more isolated.",
-                "To the northeast is Ruby River, and to the west is Five Mile Creek."
-            )
+                "To the northeast is Ruby River, and to the west is Five Mile Creek.")
 
             val rubyRiver = Location(
                 "Ruby River",
                 "A large, fast-moving river that shapes " +
                         "the landscape. It acts as a natural boundary and adds to the rugged feel of the area.",
-                "To the north is Two Forks Lookout, and to the southwest is Cottonwood Creek.",
-                "Raft",
-            )
+                "To the north is Two Forks Lookout, and to the southwest is Cottonwood Creek.")
 
             val twoForksLookout = Location(
                 "Two-Forks Lookout", "A tall wooden lookout " +
                         "tower with wide views over the surrounding forest.", "To the north is Beartooth Point, " +
-                        "to the northwest is Thunder Canyon, and to the south is Ruby River."
-            )
+                        "to the northwest is Thunder Canyon, and to the south is Ruby River.")
 
 
             locations.add(thorofareBasin)
@@ -305,7 +300,7 @@ class GameWorld {
 
         var currentLocation: Location = gameWorld.locations[9]
 
-        val mapIcon = ImageIcon(ClassLoader.getSystemResource("images/firewatchMap.jpg")).scaled(400,400)
+        val mapIcon = ImageIcon(ClassLoader.getSystemResource("images/firewatchMap.jpg")).scaled(350, 350)
 
 
         val frame = JFrame("Firewatch Game")
@@ -338,13 +333,13 @@ class GameWorld {
         }
 
         private fun setupLayout() {
-            panel.preferredSize = java.awt.Dimension(1500, 800)
+            panel.preferredSize = java.awt.Dimension(1200, 700)
 
             locationName.setBounds(150, 30, 1000, 120)
             descriptionText.setBounds(150, 120, 1000, 120)
             directionalInfo.setBounds(150, 160, 1000, 120)
-            instructionLabel.setBounds(150, 700, 400, 40)
-            mapLabel.setBounds(1050, 30, 400, 300)
+            instructionLabel.setBounds(150, 600, 400, 40)
+            mapLabel.setBounds(820, 20, 350, 350)
 
             northWestButton.setBounds(600, 450, 90, 40)
             northButton.setBounds(700, 450, 90, 40)
