@@ -93,11 +93,6 @@ class GameWorld {
 
 
         }
-        for (location in locations) {
-            if (location.itemHere != null) {
-                println("${location.name}: ${location.itemHere}")
-            }
-        }
     }
 
     //Save the last picked up item so that when i remove it from the location (so the message doesn't repeat everytime)
