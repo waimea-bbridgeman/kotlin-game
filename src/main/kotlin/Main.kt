@@ -66,7 +66,7 @@ class GameWorld {
 
     var fireLocation: Location = Location("", "", "")
 
-    var timeRemaining = 5
+    var timeRemaining = 250
     val fireTimer = Timer(1000, null) // countdown for the end of the game
 
     var bucketFull = false
@@ -90,6 +90,13 @@ class GameWorld {
             val spot = eligible.random()
             spot.itemHere = item
             eligible.remove(spot)
+
+
+        }
+        for (location in locations) {
+            if (location.itemHere != null) {
+                println("${location.name}: ${location.itemHere}")
+            }
         }
     }
 
@@ -445,6 +452,7 @@ class GameWorld {
 
             val required = destination.requiredItem
 
+            //if GameWorld returns something after an action then the UI shows a message accordingly
             if (result == "BLOCKED") {
                 JOptionPane.showMessageDialog(frame, "You need a $required to go there.")
                 return

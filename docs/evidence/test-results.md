@@ -4,13 +4,53 @@ The test results show the actual outcome of the testing, following the [Test Pla
 
 ---
 
+## The Map used in game. 
+![firewatchMap.jpg](../../src/main/resources/images/firewatchMap.jpg)
+
+
+
+## Does the game set up properly? 
+
+The game should run and set the user to be at Two Forks lookout
+
+### Test Data Used
+
+Run the game 
+
+### Test Result
+
+![spawn.png](screenshots/spawn.png)
+
+The player spawned at the correct location. 
+
+---
+
+## Do the items spawn randomly?
+
+The game should run and spawn the items randomly
+
+### Test Data Used
+
+Run the game twice while printing the items to the console 
+
+### Test Result
+
+![randomLocation1.png](screenshots/randomLocation1.png)
+
+![randomLocation2.png](screenshots/randomLocation2.png)
+
+
+The items were at random locations (The first picture was the first time and the second picture was the second test.)
+
+---
+
 ## Valid movements 
 
 When the user presses a valid button does the location change?
 
 ### Test Data Used
 
-I pressed valid buttons 
+I am going to travel around the map through a couple of locations 
 
 ### Test Result
 
@@ -26,7 +66,7 @@ If the user goes to the edge of the map can they go off the edge of it? Or does 
 
 ### Test Data Used
 
-Going to the boundary of the map 
+Going to boundary locations on the map 
 
 ### Test Result
 
@@ -42,7 +82,7 @@ If the user tries to move to a location that isn't connected or shouldn't be all
 
 ### Test Data Used
 
-Pressing invalid buttons 
+Go to the edge of the map and try move off it 
 
 ### Test Result
 
@@ -74,13 +114,30 @@ Can the user run out of time if they take too long?
 
 ### Test Data Used
 
-Running out of time 
+Allowing the timer to reach 0  
 
 ### Test Result
 
 ![lose.gif](screenshots/lose.gif)
 
 The player lost the game. 
+
+---
+
+
+## Can the player pick up items?
+
+When the user travels to a location with an item at it do they pick it up? 
+
+### Test Data Used
+
+Find a location with an item 
+
+### Test Result
+
+![itemPickup.gif](screenshots/itemPickup.gif)
+
+The player picked up the item 
 
 ---
 
